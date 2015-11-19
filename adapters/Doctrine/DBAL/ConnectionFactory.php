@@ -24,7 +24,9 @@ class ConnectionFactory extends BaseConnectionFactory
      */
     public function createConnection(array $params, Configuration $config = null, EventManager $eventManager = null, array $mappingTypes = array())
     {
-        $params['dbname'] = $this->getDbNameFromEnv($params['dbname']);
+        if ( debug_backtrace()[1]['function'] != 'refreshDoctrineConnection' ) {
+            $params['dbname'] = $this->getDbNameFromEnv($params['dbname']);
+        }
 
         return parent::createConnection($params, $config, $eventManager, $mappingTypes);
     }
