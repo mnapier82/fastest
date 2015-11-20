@@ -12,6 +12,9 @@ use Liuggio\Fastest\Process\EnvCommandCreator;
  */
 class ConnectionFactory extends BaseConnectionFactory
 {
+    
+    private $runOnce = false;
+    
     /**
      * Create a connection by name.
      *
@@ -24,8 +27,9 @@ class ConnectionFactory extends BaseConnectionFactory
      */
     public function createConnection(array $params, Configuration $config = null, EventManager $eventManager = null, array $mappingTypes = array())
     {
-        if (debug_backtrace()[1]['function'] != 'refreshDoctrineConnection') {
+        if (!$this->runOnce) {
             $params['dbname'] = $this->getDbNameFromEnv($params['dbname']);
+            $this->runOnce = true;
         }
 
         return parent::createConnection($params, $config, $eventManager, $mappingTypes);
